@@ -123,7 +123,7 @@ new BSD license
 igaiga [at] gmail.com
 http://igarashikuniaki.net/tdiary/
 http://code.google.com/p/twym/
-http://github.com/igaiga
+http://github.com/igaiga/TwYM
 
 イベントや勉強会などで使っていただけるとうれしいです。
 使いました報告をもらえると小躍りして喜びます。ヽ(´▽`)ノ
@@ -132,7 +132,6 @@ http://github.com/igaiga
 -- デザイン改良
 -- gem対応
 -- ruby1.9対応
--- gitHubで開発
 
 -- Ver.0.80
 --- 2010.3.28
@@ -140,6 +139,7 @@ http://github.com/igaiga
 rbuconvを標準ライブラリnkfで置き換え
 バグ修正
  QC で表示が黒帯になる問題修正
+githubにリポジトリ作成
 
 -- Ver.0.70
 --- 2010.3.15
