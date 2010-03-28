@@ -1,0 +1,28 @@
+# -*- coding: utf-8; -*-
+
+# -*-ruby-*-
+# bot_file_name and BotClassName must be same name
+# (BotClassName.downcase == bot_file_name)
+# -*- coding: utf-8; -*-
+
+# path setting
+this_file_s_path = File.expand_path(File.dirname(__FILE__))
+config_path = File.expand_path(this_file_s_path + "/../../")
+$LOAD_PATH.unshift config_path
+$LOAD_PATH.unshift this_file_s_path
+
+require 'drb'
+load 'config.rb'
+
+$ts = DRbObject.new_with_uri(TS_URL)
+
+class TwYMBot < Nadoka::NDK_Bot
+  def on_privmsg prefix, ch, msg
+    mb = Hash.new
+    mb[NICK] = prefix.nick
+    mb[MESSAGE] = msg
+    p mb
+    $ts.write([IRC, mb], TUPLE_AVAILAVLE_TIME)
+  end
+end
+
