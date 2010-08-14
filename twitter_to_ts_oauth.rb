@@ -1,5 +1,6 @@
 #! ruby -Ku
 # coding: utf-8
+$:.unshift File.join(File.dirname(__FILE__))
 
 require 'net/http'
 require 'uri'
@@ -10,6 +11,7 @@ require 'oauth'
 require 'twitter_oauth_authorize.rb'
 
 #HASHTAG = '#kosenconf'
+#HASHTAG = '#glt'
 #HASHTAG = '#twym'
 HASHTAG = '#nowplaying'
 

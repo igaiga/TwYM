@@ -9,12 +9,13 @@ IRC, twitter のメッセージを表示できるタイマーです。
 --- Leopardでは動作すると思います。未確認です。 
 --- Tigerでは動作しないと思います。未確認です。 
 -- ruby 1.8.7
---- ruby1.9.1 では動作しません。(本体およびnadokaが未対応)
+--- ruby1.9.X では動作しません。(本体およびnadokaが未対応)
 
 - 使用している外部ライブラリのライセンスにも同意した上でご利用ください。
 -- nadoka　(IRC bot framework)
 --- http://www.atdot.net/nadoka/nadoka.ja.html
 -- json (jsonファイルパースライブラリ)
+-- oauth (OAuth認証ライブラリ)
 
 - Files
 -- readme.txt
@@ -28,6 +29,7 @@ IRC, twitter のメッセージを表示できるタイマーです。
 -- friendchart_nadokarc : nadoka 設定ファイルサンプル(friend-chat)
 -- ustream_nadokarc : nadoka 設定ファイルサンプル(ustream)
 -- twitter_to_ts_template.rb twitterから中間キューへ送信するスクリプト
+-- twitter_oauth_authorize.rb twitter OAuth認証クラス
 
 - install
 -- setup.sh
@@ -66,9 +68,10 @@ setup.sh を実行すると、nadoka を 取得し、設定ファイルを配置
 --- または、下記から json ライブラリをダウンロードして配置してください
 --- http://rubyforge.org/frs/?group_id=953
 --- twitter_to_ts_template.rb の下記の箇所を編集して、例えば twitter_to_ts.rb という名前で保存してください。
- USERNAME = 'igaiga555'# twitter user name
- PASSWORD = 'pass' # twitter password 
  HASHTAG = '#nowplaying' # twitter hashtag
+--- HASHTAGで指定した文字列を含むつぶやきを表示します。
+--- 下記のコマンドで OAuth ライブラリをインストールします
+--- $ sudo gem install OAuth
 
 - run
 -- TwYM.qtz を起動します
@@ -93,7 +96,16 @@ setup.sh を実行すると、nadoka を 取得し、設定ファイルを配置
  別のターミナルから以下を起動します。
  $ ruby twitter_to_ts.rb
 ※あらかじめ、ソース内の以下を書き換えておいてください。
-USERNAME, PASSWORD, HASHTAG
+HASHTAG
+-- 初回のOAuth認証
+ 初回起動時にOAuth認証を行います。
+ ブラウザが起動してtwitterのOAuth認証画面が表示されますので、
+ 確認の上、allow を選択するとPIN番号(7桁数字)が表示されます。
+ PIN番号をコンソールへ入力してください。
+-- 別のアカウントでログインする場合
+config_twitter_oauth_access_token.rb を削除してから、いつものように
+ $ ruby twitter_to_ts.rb
+を起動してください。
 
 - TwYM.qtz 操作方法
   Input Parameters を押すと時間設定、
@@ -132,6 +144,10 @@ http://github.com/igaiga/TwYM
 -- デザイン改良
 -- gem対応
 -- ruby1.9対応
+
+-- Ver.0.81
+--- 2010.8.14
+twitter OAauth認証対応
 
 -- Ver.0.80
 --- 2010.3.28
