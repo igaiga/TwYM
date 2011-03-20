@@ -23,21 +23,6 @@ require 'drb'
 require 'config.rb'
 $ts = DRbObject.new_with_uri(TS_URL)
 
-# for OAuth
-# consumer = OAuth::Consumer.new(TWITTER_OAUTH_CONSUMER_KEY, TWITTER_OAUTH_CONSUMER_SECRET, {
-#      :site               => TWITTER_URL,
-#      :http_method        => :post })
-
-# unless (File.exist?(TWITTER_OAUTH_CONFIG_FILE))
-#   # ユーザーにOAuth認証をしてもらう
-#   OAuthAuthorizer.run
-# end
-
-# at = JSON.parse(File.read(TWITTER_OAUTH_CONFIG_FILE))
-# oauth_access_token  = at['token']
-# oauth_access_secret = at['secret']
-# access_token = OAuth::Token.new(oauth_access_token, oauth_access_secret)
-
 query = URI.encode(HASHTAG)
 #query = ARGV.shift
 #raise "please give some query" if query.nil?
@@ -45,12 +30,15 @@ query = URI.encode(HASHTAG)
 #BASIC_認証
 twitter_id   = "username"
 twitter_pass = "password"
+# StreamAPIでは将来に渡ってBasic認証で良いらしい
+# http://dev.twitter.com/pages/auth_overview
+# The Streaming API supports both basic and OAuth authentication on stream.twitter.com. For the time being there is no date on which basic authentication will be turned off for the Streaming API so you are free to choose whichever method you wish. On User Streams and Site Streams, OAuth is required.
 
 EventMachine::run {
   EventMachine::defer {
     stream = Twitter::JSONStream.connect(
                :path => "/1/statuses/filter.json?track=#{query}",
-                                         :auth => "#{twitter_id}:#{twitter_pass}"
+               :auth => "#{twitter_id}:#{twitter_pass}"
              )
 
     stream.each_item do |status|
