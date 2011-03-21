@@ -34,7 +34,7 @@ IRC, twitter のメッセージを表示できるタイマーです。
 - install
 -- 下記のコマンドで gemパッケージをインストールします。（必要に応じて sudo してください。）
 --- $ gem install json
---- $ gem install OAuth
+--- $ gem install oauth
 --- $ gem install twitter-stream
 --- $ gem install eventmachine
 
