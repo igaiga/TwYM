@@ -4,51 +4,53 @@ $:.unshift File.join(File.dirname(__FILE__))
 
 require 'net/http'
 require 'uri'
+require 'drb'
+
+#gems
 require 'rubygems'
 require 'json'
 require 'oauth'
-
 require "twitter/json_stream"
 require "eventmachine"
 
+# TwYM
 require 'twitter_oauth_authorize.rb'
+require 'config.rb'
 
+# twitter query
 #HASHTAG = 'kosenconf'
 #HASHTAG = 'glt'
 #HASHTAG = 'twym'
-#HASHTAG = 'nowplaying'
-HASHTAG = 'iphone'
+HASHTAG = 'nowplaying'
+# 引数指定があればそちら優先、なければ HASHTAG
+query = HASHTAG unless query = ARGV.shift
+query = URI.encode(query)
 
-require 'drb'
-require 'config.rb'
+# for OAuth
+OAuthAuthorizer.run unless (File.exist?(TWITTER_OAUTH_CONFIG_FILE)) #初回時
+at = JSON.parse(File.read(TWITTER_OAUTH_CONFIG_FILE))
+oauth_access_token  = at['token']
+oauth_access_secret = at['secret']
+
+# tuple space
 $ts = DRbObject.new_with_uri(TS_URL)
-
-query = URI.encode(HASHTAG)
-#query = ARGV.shift
-#raise "please give some query" if query.nil?
-
-#BASIC_認証
-twitter_id   = "username"
-twitter_pass = "password"
-# StreamAPIでは将来に渡ってBasic認証で良いらしい
-# http://dev.twitter.com/pages/auth_overview
-# The Streaming API supports both basic and OAuth authentication on stream.twitter.com. For the time being there is no date on which basic authentication will be turned off for the Streaming API so you are free to choose whichever method you wish. On User Streams and Site Streams, OAuth is required.
 
 EventMachine::run {
   EventMachine::defer {
     stream = Twitter::JSONStream.connect(
-               :path => "/1/statuses/filter.json?track=#{query}",
-               :auth => "#{twitter_id}:#{twitter_pass}"
-             )
-
+               :path => "/1/statuses/filter.json",
+               :filters => [query],
+               :oauth => {
+                 :consumer_key    => TWITTER_OAUTH_CONSUMER_KEY,
+                 :consumer_secret => TWITTER_OAUTH_CONSUMER_SECRET,
+                 :access_key      => oauth_access_token,
+                 :access_secret   => oauth_access_secret })
     stream.each_item do |status|
       tweet = JSON.parse(status)      
       screen_name = tweet['user']['screen_name']
-      body = tweet['text']
+      body = tweet['text'].gsub(/##{query}$/i,'')
       puts "#{screen_name}: #{body}"
-      mb = Hash.new
-      mb[NICK] = screen_name
-      mb[MESSAGE] = body.gsub(/#{query}$/i,'')
+      mb = { NICK => screen_name, MESSAGE => body }
       $ts.write([TWITTER, mb], TUPLE_AVAILAVLE_TIME)
     end
   }
