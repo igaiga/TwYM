@@ -1,0 +1,193 @@
+## -*-ruby-*- vim: set filetype=ruby :
+##
+## Nadoka Sample resource file
+## $Id: nadokarc 171 2006-08-31 16:57:04Z znz $
+#
+# Copyright (c) 2004-2005 SASADA Koichi <ko1 at atdot.net>
+#
+# This program is free software with ABSOLUTELY NO WARRANTY.
+# You can re-distribute and/or modify this program under
+# the same terms of the Ruby's lisence.
+#
+#
+
+class NADOKA_Config < Nadoka::NDK_ConfigBase
+
+  ###############################################
+  # System setting
+  
+  # Setting_name = 'IRCNet'
+  #  # If you don't specify Setting_name,
+  #  # system use rc file name as setting name
+  #  # if your rc file is "test.rc", setting name is "test"
+  #  # (remove last .rc)
+  #
+  
+  # 0: quiet
+  # 1: ch log only
+  # 2: normal
+  # 3: debug
+  Loglevel = 2
+
+
+  ###############################################
+  # client server setting
+  Client_server_port = 6667
+  Client_server_host = nil # You can specify binding host(interface)
+  Client_server_pass = 'nadokapassword' # nadoka password
+  Client_server_acl  = nil
+
+  # ACL(Access Control List) example:
+  # Client_server_acl = %q{
+  #   deny all
+  #   allow 192.168.1.1
+  #   allow 192.168.2.0/24
+  # } # ACL setting must be String
+  #
+  # or you can set acl directly like follows:
+  #
+  # ACL_Object = ::ACL.new(...)
+  #
+
+
+  ###############################################
+  # server setting
+
+  # IRCnet servers from
+  #   http://irc.kyoto-u.ac.jp/list-of-servers.html
+  Servers = [
+    { :host => 'irc.friend-chat.jp',
+      :port => (6664),             # default: 6667
+      :pass => nil,                        # default: nil
+    }
+  ]
+
+
+###############################################
+# userinfo
+  User     = 'twym'
+  Nick     = 'twym'
+  Hostname = Socket.gethostname
+  Realname = 'nadoka user'
+  Mode     = nil
+  Away_Message = 'away'
+
+  # If this item is String, your nick will
+  # be that when no clients are connected.
+  Away_Nick    = nil
+
+  # Quit_Message = "Quit Nadoka"
+
+
+  ###############################################
+  # channel info
+
+  # log filename format
+  #  ${setting_name} : Setting name
+  #  ${channel_name} : Channel name
+  #  %? : Time#strftime format(see ruby reference)
+  #
+
+
+  Default_log = {
+    :file           => '${setting_name}-${channel_name}/%y%m%d.log',
+    :time_format    => '%H:%M:%S',
+    :message_format => {
+      'PRIVMSG' => '<{nick}> {msg}',
+      'NOTICE'  => '{{nick}} {msg}',
+      'JOIN'    => '+ {nick} ({prefix:user}@{prefix:host})',
+      'NICK'    => '* {nick} -> {newnick}',
+      'QUIT'    => '- {nick} (QUIT: {msg}) ({prefix:user}@{prefix:host})',
+      'PART'    => '- {nick} (PART: {msg}) ({prefix:user}@{prefix:host})',
+      'KICK'    => '- {nick} was kicked by {kicker} ({msg})',
+      'MODE'    => '* {nick} changed mode ({msg})',
+      'TOPIC'   => '* TOPIC: {msg} (by {nick})',
+      'SYSTEM'  => '[NDK] {orig}',
+      'OTHER'   => '{orig}',
+      'SIMPLE'  => '{orig}',
+    },
+  }
+
+  System_log = {
+    :file           => '${setting_name}-system.log',
+    :time_format    => '%y/%m/%d-%H:%M:%S',
+    :message_format => {
+      'PRIVMSG' => '{ch} <{nick}> {msg}',
+      'NOTICE'  => '{ch} {{nick}} {msg}',
+      'JOIN'    => '{ch} + {nick} ({prefix:user}@{prefix:host})',
+      'NICK'    => '{ch} * {nick} -> {newnick}',
+      'QUIT'    => '{ch} - {nick} (QUIT: {msg}) ({prefix:user}@{prefix:host})',
+      'PART'    => '{ch} - {nick} (PART: {msg}) ({prefix:user}@{prefix:host})',
+      'KICK'    => '{ch} - {nick} was kicked by {kicker} ({msg})',
+      'MODE'    => '{ch} * {nick} changed mode ({msg})',
+      'TOPIC'   => '{ch} * TOPIC:  {msg} (by {nick})',
+      'SYSTEM'  => '[NDK] {orig}',
+      'OTHER'   => nil,
+      'SIMPLE'  => nil,
+    },
+  }
+
+  Talk_log = {
+    :file           => '${setting_name}-talk/%y%m%d.log',
+    :time_format    => Default_log[:time_format],
+    :message_format => {
+      'PRIVMSG' => '[{sender} => {receiver}] {msg}',
+      'NOTICE'  => '{{sender} => {receiver}} {msg}',
+    }
+  }
+
+  Channel_info = {
+    '#TwYM_ch' => {
+      :timing  => :startup,
+      :log     => '${setting_name}-nadoka-chan/%y%m%d.log',
+    },
+  }
+
+  BackLog_Lines = 20
+
+  #
+  # FilenameEncoding = 'euc'
+  # FilenameEncoding = 'sjis'
+  # FilenameEncoding = 'utf8'
+  #
+  # If you not specify FilenameEncoding, nadoka infers
+  # suitable encoding (see ndk/config.rb).
+  #
+  
+  ###############################################
+  # Directory
+  Log_dir     = './log'
+
+  Plugins_dir = './plugins'
+  # You can set Plugins_dir as Enumerable object.
+  # ex: ['./dir1', './dir2', ...]
+
+
+  ###############################################
+  # Bots
+  BotConfig = [
+     :TwYMBot,
+#     :samplebot,
+    # :BotName1,
+    # 'BotName1',
+    # :BotName2,
+    # { :name => :BotName3,
+    #   :set1 => setting1,
+    # },
+    # { :name => :BotName3,
+    #   :set1 => setting2,
+    # },
+    # { :name => :BotName4,
+    #   :set1 => setting3,
+    # },
+
+    :BackLogBot, # strongly recommended
+              ]
+
+
+  ###############################################
+  # Misc
+
+  Privmsg_Filter = nil
+  Notice_Filter  = nil
+end

@@ -1,5 +1,5 @@
 #! ruby -Ku
-# coding: utf-8
+# -*- coding: utf-8; -*-
 $:.unshift File.join(File.dirname(__FILE__))
 
 require 'net/http'
@@ -20,11 +20,9 @@ require 'config.rb'
 # twitter query
 #HASHTAG = 'kosenconf'
 #HASHTAG = 'glt'
-#HASHTAG = 'twym'
 HASHTAG = 'nowplaying'
 # 引数指定があればそちら優先、なければ HASHTAG
-query = HASHTAG unless query = ARGV.shift
-query = URI.encode(query)
+query = URI.encode( ARGV.shift || HASHTAG )
 
 # for OAuth
 OAuthAuthorizer.run unless (File.exist?(TWITTER_OAUTH_CONFIG_FILE)) #初回時

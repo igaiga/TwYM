@@ -14,8 +14,7 @@ IRC, twitter のメッセージを表示できるタイマーです。
 - 使用している外部ライブラリのライセンスにも同意した上でご利用ください。
 -- nadoka　(IRC bot framework)
 --- http://www.atdot.net/nadoka/nadoka.ja.html
--- json (jsonファイルパースライブラリ)
--- oauth (OAuth認証ライブラリ)
+-- ほか、gem パッケージ群
 
 - Files
 -- readme.txt
@@ -25,19 +24,25 @@ IRC, twitter のメッセージを表示できるタイマーです。
 -- tuple_space.rb 中間キュー
 -- ts_to_twim.rb 中間キューからQCへ送信するスクリプト
 -- test_to_ts.rb 中間キューへテスト文字列を送信するスクリプト
+-- twitter_to_ts.rb twitterから中間キューへ送信するスクリプト
+-- twitter_oauth_authorize.rb twitter OAuth認証クラス
+-- setup_nadoka.sh IRCライブラリ(nadoka)セットアップスクリプト
 -- twymbot.nb nadokaから中間キューへ送信するnadoka bot設定ファイル
 -- friendchart_nadokarc : nadoka 設定ファイルサンプル(friend-chat)
 -- ustream_nadokarc : nadoka 設定ファイルサンプル(ustream)
--- twitter_to_ts_template.rb twitterから中間キューへ送信するスクリプト
--- twitter_oauth_authorize.rb twitter OAuth認証クラス
 
 - install
--- setup.sh
- $ ./setup.sh
-setup.sh を実行すると、nadoka を 取得し、設定ファイルを配置します。
-詳細はsetup.shを読んでください。
+-- 下記のコマンドで gemパッケージをインストールします。（必要に応じて sudo してください。）
+--- $ gem install json
+--- $ gem install OAuth
+--- $ gem install twitter-stream
+--- $ gem install eventmachine
 
 -- IRC をメッセージを表示する場合
+-- setup_nadoka.sh
+ $ ./setup_nadoka.sh
+実行すると、nadoka を 取得し、設定ファイルを配置します。
+
 --- nadokarc を編集します。
 下記の箇所を修正してください。
 詳細はnadokaの説明書を参照してください。
@@ -62,17 +67,6 @@ setup.sh を実行すると、nadoka を 取得し、設定ファイルを配置
     },
   }
 
--- Twitterをメッセージを表示する場合
---- 下記のコマンドで json ライブラリをインストールします
---- $ sudo gem install json
---- または、下記から json ライブラリをダウンロードして配置してください
---- http://rubyforge.org/frs/?group_id=953
---- twitter_to_ts_template.rb の下記の箇所を編集して、例えば twitter_to_ts.rb という名前で保存してください。
- HASHTAG = '#nowplaying' # twitter hashtag
---- HASHTAGで指定した文字列を含むつぶやきを表示します。
---- 下記のコマンドで OAuth ライブラリをインストールします
---- $ sudo gem install OAuth
-
 - run
 -- TwYM.qtz を起動します
 -- 中間キューを起動します
@@ -86,17 +80,12 @@ setup.sh を実行すると、nadoka を 取得し、設定ファイルを配置
  別のターミナルから以下を起動します。
  $ ruby test_to_ts.rb
    QC側に文字列が表示されればOKです。ctrl+c で停止します。
-   QC側で文字化けなどする場合は rbuconv がうまく動いてない可能性があります。
--- IRCに接続する方法
---- nadokaを起動します
- 別のターミナルから以下を起動します。
- $ cd nadoka
- $ ruby nadoka.rb -r ../friendchat_nadokarc
 -- Twitterに接続する方法
  別のターミナルから以下を起動します。
- $ ruby twitter_to_ts.rb
-※あらかじめ、ソース内の以下を書き換えておいてください。
-HASHTAG
+ $ ruby twitter_to_ts.rb [検索語]
+ 例) $ ruby twitter_to_ts.rb iphone
+※[検索語]を指定しない場合は、ソース内のHASHTAG で検索します。
+　HASHTAG を上書きすることでも検索語を指定可能です。
 -- 初回のOAuth認証
  初回起動時にOAuth認証を行います。
  ブラウザが起動してtwitterのOAuth認証画面が表示されますので、
@@ -106,6 +95,12 @@ HASHTAG
 config_twitter_oauth_access_token.rb を削除してから、いつものように
  $ ruby twitter_to_ts.rb
 を起動してください。
+
+-- IRCに接続する方法
+--- nadokaを起動します
+ 別のターミナルから以下を起動します。
+ $ cd nadoka
+ $ ruby nadoka.rb -r ../friendchat_nadokarc
 
 - TwYM.qtz 操作方法
   Input Parameters を押すと時間設定、
@@ -140,10 +135,21 @@ http://github.com/igaiga/TwYM
 イベントや勉強会などで使っていただけるとうれしいです。
 使いました報告をもらえると小躍りして喜びます。ヽ(´▽`)ノ
 
+- contributer
+-- yoozoosato
+-- yamaguchiintlab
+-- june29
+ご協力ありがとうございます。
+
 - 今後やりたいこと
 -- デザイン改良
 -- gem対応
 -- ruby1.9対応
+
+-- Ver.0.90
+--- 2011.3.21
+twitter データ取得をtwitter-streamライブラリを使うよう変更(取得漏れ対応)
+(june29さんにご協力いただきました。ありがとうございました。)
 
 -- Ver.0.81
 --- 2010.8.14
