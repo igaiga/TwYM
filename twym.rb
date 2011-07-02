@@ -67,10 +67,10 @@ class ToQC
   def initialize
     @DISPLAY_SEC = 11 #sec # 表示秒数を変える場合は、QC側も変更する必要がある。
     @address = '225.0.0.0'
-    @ports = [QC_ports.new(1, 50100, 50101, 50102, 50103),
-              QC_ports.new(2, 50200, 50201, 50202, 50203),
-              QC_ports.new(3, 50300, 50301, 50302, 50303),
-              QC_ports.new(4, 50400, 50401, 50402, 50403)]
+    @ports = []
+    @ports << QC_ports.new(1, 50100, 50101, 50102, 50103)
+    @ports << QC_ports.new(2, 50200, 50201, 50202, 50203)
+    @ports << QC_ports.new(3, 50300, 50301, 50302, 50303)
     @port_star =  51001
     @queue = Array.new
   end

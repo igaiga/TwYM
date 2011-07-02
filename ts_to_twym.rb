@@ -19,7 +19,7 @@ class TwymController
         label = mb_array[0]
         mb = mb_array[1]
         # [:label, {:message=>"Hello world!", :nick=>"igaiga"}] の形式で取れる。
-        p  qc_str = "#{mb[NICK]}: #{mb[MESSAGE]}"
+        puts  qc_str = "#{mb[NICK]}: #{mb[MESSAGE]}"
         @qc.send mb[NICK], mb[MESSAGE]
       else
         sleep 1
