@@ -9,57 +9,52 @@ $LOAD_PATH.unshift this_file_s_path
 
 require 'socket'
 require 'nkf'
+require 'pp'
 # ruby1.9はUTF-32BEを扱うのに標準ライブラリ kconv を使う
 #require 'kconv'
 
 class QC_ports
-  attr_accessor :id, :name, :line1, :line2, :line3, :time
-  def initialize(id, name_port, line1_port, line2_port, line3_port)
+  attr_accessor :id, :name, :line1, :line2, :line3, :line4, :time
+  def initialize(id, name_port, line1_port, line2_port, line3_port, line4_port)
     @id = id
     @name = name_port
     @line1 = line1_port
     @line2 = line2_port
     @line3 = line3_port
+    @line4 = line4_port
     @time = nil # 前回送信した時刻
   end
 end
 
 class Message
-  attr_accessor :name, :str
-  attr_reader :line1, :line2, :line3
+  attr_accessor :name
+  attr_reader :line1, :line2, :line3, :line4
 
   def initialize(name, str)
-    @name = name
-    @str = str
-    @line1 = ' ' # 空文字列送信するとQC側で前の文字列が残っちゃうので space 送る
-    @line2 = ' '
-    @line3 = ' '
-    init_lines(str)
+    @name     = name
+    @org_str  = str.clone
+    @work_str = str
+    init_lines
   end
 
-  def init_lines(str)
-    line1_size = 20
-    line2_size = 60
-    line3_size = 60
-    @line1 = str.slice! /\A(.{#{line1_size}})/
-    if @line1 == nil
-      @line1 = (str == '' ? ' ' : str)
-      return
+  def split_to_lines(size)
+    return ' ' unless @work_str # 空文字列送信するとQC側で前の文字列が残っちゃうので space 送る
+    str = @work_str.slice! /\A(.{#{size}})/
+    unless str #全文字処理完了
+      str = @work_str
+      @work_str = nil
     end
-    @line2 = str.slice! /\A(.{#{line2_size}})/
-    if @line2 == nil
-      @line2 = (str == '' ? ' ' : str)
-      return
-    end
-    @line3 = str.slice! /\A(.{#{line3_size}})/
-    if @line3 == nil
-      @line3 = (str == '' ? ' ' : str)
-      return
-    end
+    str = ' ' if str == '' #上記の理由で空文字送信防止
+    str
   end
-  def slice_str(str, dst)
+
+  def init_lines
+    @line1 = split_to_lines(20) #文字数
+    @line2 = split_to_lines(40)
+    @line3 = split_to_lines(40)
+    @line4 = split_to_lines(40)
   end
-  
+
 end
 
 class ToQC
@@ -68,9 +63,9 @@ class ToQC
     @DISPLAY_SEC = 11 #sec # 表示秒数を変える場合は、QC側も変更する必要がある。
     @address = '225.0.0.0'
     @ports = []
-    @ports << QC_ports.new(1, 50100, 50101, 50102, 50103)
-    @ports << QC_ports.new(2, 50200, 50201, 50202, 50203)
-    @ports << QC_ports.new(3, 50300, 50301, 50302, 50303)
+    @ports << QC_ports.new(1, 50100, 50101, 50102, 50103, 50104)
+    @ports << QC_ports.new(2, 50200, 50201, 50202, 50203, 50204)
+    @ports << QC_ports.new(3, 50300, 50301, 50302, 50303, 50304)
     @port_star =  51001
     @queue = Array.new
   end
@@ -110,12 +105,13 @@ class ToQC
    end
 
   def send_message_every_ports(port, message)
-    p message
-    send_star(message.str)               # star
+    pp message
+    send_star('star')               # star
     send_UDP(message.name,  port.name)   # メッセージ name
     send_UDP(message.line1, port.line1)  # メッセージ 1行目
     send_UDP(message.line2, port.line2)  # メッセージ 2行目
     send_UDP(message.line3, port.line3)  # メッセージ 3行目
+    send_UDP(message.line4, port.line4)  # メッセージ 4行目
     port.time = Time.now
   end
   
