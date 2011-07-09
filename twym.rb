@@ -14,15 +14,19 @@ require 'pp'
 #require 'kconv'
 
 class QC_ports
-  attr_accessor :id, :name, :line1, :line2, :line3, :line4, :time
-  def initialize(id, name_port, line1_port, line2_port, line3_port, line4_port)
+  attr_accessor :id, :name, :line1, :line2, :line3, :line4, :time, :display_second, :display_second_for_qc, :display_second_port
+  DisplayTimeBuffer = 1 #sec
+  def initialize(id, name_port, line1_port, line2_port, line3_port, line4_port, display_second_port)
     @id = id
     @name = name_port
     @line1 = line1_port
     @line2 = line2_port
     @line3 = line3_port
     @line4 = line4_port
+    @display_second_port = display_second_port
     @time = nil # 前回送信した時刻
+    @display_second_for_qc = 7 # sec
+    @display_second = @display_second_for_qc + DisplayTimeBuffer # sec
   end
 end
 
@@ -60,12 +64,11 @@ end
 class ToQC
   public
   def initialize
-    @DISPLAY_SEC = 11 #sec # 表示秒数を変える場合は、QC側も変更する必要がある。
     @address = '225.0.0.0'
     @ports = []
-    @ports << QC_ports.new(1, 50100, 50101, 50102, 50103, 50104)
-    @ports << QC_ports.new(2, 50200, 50201, 50202, 50203, 50204)
-    @ports << QC_ports.new(3, 50300, 50301, 50302, 50303, 50304)
+    @ports << QC_ports.new(1, 50100, 50101, 50102, 50103, 50104, 50110)
+    @ports << QC_ports.new(2, 50200, 50201, 50202, 50203, 50204, 50210)
+    @ports << QC_ports.new(3, 50300, 50301, 50302, 50303, 50304, 50310)
     @port_star =  51001
     @queue = Array.new
   end
@@ -92,11 +95,11 @@ class ToQC
 
   private
 
-  # 前の送信からX秒経過したportがあれば送信
+  # 前の送信から指定秒秒経過したportがあれば送信
   def send_message(message)
     @ports.each do | port |  
        now = Time.now
-       if port.time == nil || port.time < now - @DISPLAY_SEC # sec
+       if port.time == nil || port.time < now - port.display_second
          send_message_every_ports(port, message)
          return true
        end
@@ -112,6 +115,7 @@ class ToQC
     send_UDP(message.line2, port.line2)  # メッセージ 2行目
     send_UDP(message.line3, port.line3)  # メッセージ 3行目
     send_UDP(message.line4, port.line4)  # メッセージ 4行目
+    send_UDP(port.display_second_for_qc.to_s, port.display_second_port)  # 何秒表示するか
     port.time = Time.now
   end
   
