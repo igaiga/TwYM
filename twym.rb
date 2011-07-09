@@ -25,8 +25,12 @@ class QC_ports
     @line4 = line4_port
     @display_second_port = display_second_port
     @time = nil # 前回送信した時刻
-    @display_second_for_qc = 7 # sec
-    @display_second = @display_second_for_qc + DisplayTimeBuffer # sec
+    set_display_second 7
+  end
+
+  def set_display_second(sec)
+    @display_second_for_qc = sec
+    @display_second = @display_second_for_qc + DisplayTimeBuffer
   end
 end
 
@@ -98,14 +102,18 @@ class ToQC
   # 前の送信から指定秒秒経過したportがあれば送信
   def send_message(message)
     @ports.each do | port |  
-       now = Time.now
-       if port.time == nil || port.time < now - port.display_second
-         send_message_every_ports(port, message)
-         return true
-       end
-     end
+      if port.time == nil || port.time < Time.now - port.display_second
+        port.set_display_second display_time
+        send_message_every_ports(port, message)
+        return true
+      end
+    end
     return false # 送信できなかったので差し戻し
-   end
+  end
+
+  def display_time
+    7
+  end
 
   def send_message_every_ports(port, message)
     pp message
