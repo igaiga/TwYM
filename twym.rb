@@ -10,6 +10,9 @@ $LOAD_PATH.unshift this_file_s_path
 require 'socket'
 require 'nkf'
 require 'pp'
+#require 'rubygems'
+#require 'ruby-debug'
+
 # ruby1.9はUTF-32BEを扱うのに標準ライブラリ kconv を使う
 #require 'kconv'
 
@@ -36,7 +39,7 @@ end
 
 class Message
   attr_accessor :name
-  attr_reader :line1, :line2, :line3, :line4
+  attr_reader :line1, :line2, :line3, :line4, :org_str
 
   def initialize(name, str)
     @name     = name
@@ -115,7 +118,7 @@ class ToQC
 
   def send_message_every_ports(port, message)
     pp message
-    send_star('star')               # star
+    send_star(message.org_str)               # star
     send_UDP(message.name,  port.name)   # メッセージ name
     send_UDP(message.line1, port.line1)  # メッセージ 1行目
     send_UDP(message.line2, port.line2)  # メッセージ 2行目
