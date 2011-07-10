@@ -3,6 +3,9 @@
 
 require 'twym'
 require 'drb'
+#require 'rubygems'
+#require 'ruby-debug'
+
 load 'config.rb'
 
 class TwymController
@@ -13,6 +16,7 @@ class TwymController
 
   def run
     loop do
+      @qc.display_second = display_second
       if @qc.send # 表示できるか問い合わせ
         # 表示できる
         mb_array = @ts.take([nil, nil])
@@ -26,6 +30,20 @@ class TwymController
       end
     end
   end
+
+  def display_second
+    waitings = @ts.read_all([nil,nil])
+    puts "waitings.size = #{waitings.size}"
+    case 
+    when waitings.size < 3
+      10
+    when waitings.size < 6
+      7
+    else
+      5
+    end
+  end
+
 end
 
 #main

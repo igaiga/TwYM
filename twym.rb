@@ -66,6 +66,7 @@ class Message
 end
 
 class ToQC
+  attr_accessor :display_second
   public
   def initialize
     @address = '225.0.0.0'
@@ -74,6 +75,7 @@ class ToQC
     @ports << QC_ports.new(2, 50200, 50201, 50202, 50203, 50204, 50210)
     @ports << QC_ports.new(3, 50300, 50301, 50302, 50303, 50304, 50310)
     @port_star =  51001
+    @display_second = 10
     @queue = Array.new
   end
 
@@ -88,7 +90,7 @@ class ToQC
     @queue.push Message.new(name, str) unless name == nil # 一度queueにいれる
     return true if @queue.empty?
     message = @queue.shift # queue 先頭から取り出し
-    result = send_message(message)
+    result = send_message(message, @display_second)
     if result == false
       @queue.unshift message # queue の先頭に戻す
       return false # まだ表示したいのだけど、空き無し
@@ -100,19 +102,15 @@ class ToQC
   private
 
   # 前の送信から指定秒秒経過したportがあれば送信
-  def send_message(message)
+  def send_message(message, display_second)
     @ports.each do | port |  
       if port.time == nil || port.time < Time.now - port.display_second
-        port.set_display_second display_time
+        port.set_display_second display_second
         send_message_every_ports(port, message)
         return true
       end
     end
     return false # 送信できなかったので差し戻し
-  end
-
-  def display_time
-    7
   end
 
   def send_message_every_ports(port, message)
