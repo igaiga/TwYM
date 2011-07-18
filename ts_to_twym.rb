@@ -40,7 +40,7 @@ class TwymController
     when waitings.size < 6
       7
     else
-      5
+      3
     end
   end
 
