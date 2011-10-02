@@ -5,7 +5,7 @@ TwYM (Timer with Your Messages)
 IRC, twitter のメッセージを表示できるタイマーです。
 
 - Environment
--- Mac OS X Snow Leopard
+-- Mac OS X Lion, Snow Leopard 
 --- Leopardでは動作すると思います。未確認です。 
 --- Tigerでは動作しないと思います。未確認です。 
 -- ruby 1.8.7
@@ -21,6 +21,8 @@ IRC, twitter のメッセージを表示できるタイマーです。
 -- TwYM.qtz : Quartz Composer File (GUIフロントエンド)
 -- TwYM.rb : TwYM.qtz へメッセージ文字列を送信
 -- config.rb : 設定ファイル
+-- Gemfile : bundler 設定ファイル
+-- Gemfile.lock : bundler 設定ファイル
 -- tuple_space.rb 中間キュー
 -- ts_to_twim.rb 中間キューからQCへ送信するスクリプト
 -- test_to_ts.rb 中間キューへテスト文字列を送信するスクリプト
@@ -31,12 +33,10 @@ IRC, twitter のメッセージを表示できるタイマーです。
 -- friendchart_nadokarc : nadoka 設定ファイルサンプル(friend-chat)
 -- ustream_nadokarc : nadoka 設定ファイルサンプル(ustream)
 
-- install
+- Install
 -- 下記のコマンドで gemパッケージをインストールします。（必要に応じて sudo してください。）
---- $ gem install json
---- $ gem install oauth
---- $ gem install twitter-stream
---- $ gem install eventmachine
+--- $ gem install bundler
+--- $ bundle install
 
 -- IRC をメッセージを表示する場合
 -- setup_nadoka.sh
@@ -123,28 +123,37 @@ drb を使って通信しています。
 TUPLE_AVAILAVLE_TIME 以上経過したコメントは破棄しています。
 必要に応じて長さを変えてください。
 
-- license
+- License
 new BSD license
 
-- about creator
+- About creator
 igaiga [at] gmail.com
-http://igarashikuniaki.net/tdiary/
-http://code.google.com/p/twym/
 http://github.com/igaiga/TwYM
+http://code.google.com/p/twym/
+http://igarashikuniaki.net/tdiary/
 
 イベントや勉強会などで使っていただけるとうれしいです。
 使いました報告をもらえると小躍りして喜びます。ヽ(´▽`)ノ
 
-- contributer
--- yoozoosato
--- yamaguchiintlab
--- june29
+- Contributer
+-- @yoozoosato
+-- @yamaguchiintlab
+-- @june29
+-- @kei_s
+-- @mitaku
+-- @sora_h
 ご協力ありがとうございます。
 
 - 今後やりたいこと
 -- デザイン改良
 -- gem対応
 -- ruby1.9対応
+
+- Version History
+-- Ver.1.00
+--- 2011.10.27
+キューの待ち個数に応じて表示時間を変更
+twitter の仕様変更に伴い接続をSSLに変更
 
 -- Ver.0.90
 --- 2011.3.21
