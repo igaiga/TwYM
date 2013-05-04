@@ -1,5 +1,5 @@
 #! ruby -Ku
-# -*- coding: utf-8; -*-
+# coding: utf-8
 $:.unshift File.join(File.dirname(__FILE__))
 
 require 'net/http'
@@ -10,8 +10,8 @@ require 'drb'
 require 'rubygems'
 require 'json'
 require 'oauth'
-require "twitter/json_stream"
-require "eventmachine"
+require 'twitter/json_stream'
+require 'eventmachine'
 
 # TwYM
 require 'twitter_oauth_authorize.rb'
@@ -47,9 +47,10 @@ EventMachine::run {
     stream.each_item do |status|
       tweet = JSON.parse(status)      
       screen_name = tweet['user']['screen_name']
+      face = tweet['user']['profile_image_url']
       body = tweet['text'].gsub(/##{query}$/i,'')
       puts "#{screen_name}: #{body}"
-      mb = { NICK => screen_name, MESSAGE => body }
+      mb = { NICK => screen_name, MESSAGE => body, FACE => face }
       $ts.write([TWITTER, mb], TUPLE_AVAILAVLE_TIME)
     end
   }

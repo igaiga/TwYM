@@ -11,22 +11,24 @@ require 'socket'
 require 'nkf'
 require 'pp'
 #require 'rubygems'
-#require 'ruby-debug'
+#require 'pry'
 
 # ruby1.9はUTF-32BEを扱うのに標準ライブラリ kconv を使う
 #require 'kconv'
 
 class QC_ports
-  attr_accessor :id, :name, :line1, :line2, :line3, :line4, :time, :display_second, :display_second_for_qc, :display_second_port
+  attr_accessor :id, :name, :line1, :line2, :line3, :line4, :line5, :face, :time, :display_second, :display_second_for_qc, :display_second_port
   DisplayTimeBuffer = 1 #sec
-  def initialize(id, name_port, line1_port, line2_port, line3_port, line4_port, display_second_port)
+  def initialize(id, name_port, line1_port, line2_port, line3_port, line4_port, line5_port, face_port, display_second_port)
     @id = id
-    @name = name_port
+    @name  = name_port
     @line1 = line1_port
     @line2 = line2_port
     @line3 = line3_port
     @line4 = line4_port
+    @line5 = line5_port
     @display_second_port = display_second_port
+    @face = face_port
     @time = nil # 前回送信した時刻
     set_display_second 7
   end
@@ -38,13 +40,15 @@ class QC_ports
 end
 
 class Message
-  attr_accessor :name
-  attr_reader :line1, :line2, :line3, :line4, :org_str
+  attr_accessor :name, :face
+  attr_reader :line1, :line2, :line3, :line4, :line5, :org_str
 
-  def initialize(name, str)
+  def initialize(name, str, face = nil)
+    face_default = FACE_DEFAULT || ''
     @name     = name
     @org_str  = str.clone
     @work_str = str
+    @face = (face.nil? || face.empty?) ? face_default : face
     init_lines
   end
 
@@ -60,10 +64,11 @@ class Message
   end
 
   def init_lines
-    @line1 = split_to_lines(20) #文字数
-    @line2 = split_to_lines(40)
-    @line3 = split_to_lines(40)
-    @line4 = split_to_lines(40)
+    @line1 = split_to_lines(24) #文字数
+    @line2 = split_to_lines(24)
+    @line3 = split_to_lines(24)
+    @line4 = split_to_lines(24)
+    @line5 = split_to_lines(24)
   end
 
 end
@@ -74,9 +79,9 @@ class ToQC
   def initialize
     @address = '225.0.0.0'
     @ports = []
-    @ports << QC_ports.new(1, 50100, 50101, 50102, 50103, 50104, 50110)
-    @ports << QC_ports.new(2, 50200, 50201, 50202, 50203, 50204, 50210)
-    @ports << QC_ports.new(3, 50300, 50301, 50302, 50303, 50304, 50310)
+    @ports << QC_ports.new(1, 50100, 50101, 50102, 50103, 50104, 50105, 50109, 50110)
+#    @ports << QC_ports.new(2, 50200, 50201, 50202, 50203, 50204, 50205, 50210) #QC側を現在1つしか実装していない
+#    @ports << QC_ports.new(3, 50300, 50301, 50302, 50303, 50304, 50305, 50310) #QC側を現在1つしか実装していない
     @port_star =  51001
     @display_second = 10
     @queue = Array.new
@@ -89,8 +94,8 @@ class ToQC
   # 未表示文を押し出したいときは引数なしで呼び出し
   # 戻り値 true: 全部表示できました
   #   false: いっぱいで待ち状態です
-  def send(name = nil, str = nil)
-    @queue.push Message.new(name, str) unless name == nil # 一度queueにいれる
+  def send(name = nil, str = nil, face = nil)
+    @queue.push Message.new(name, str, face) unless name == nil # 一度queueにいれる
     return true if @queue.empty?
     message = @queue.shift # queue 先頭から取り出し
     result = send_message(message, @display_second)
@@ -124,6 +129,8 @@ class ToQC
     send_UDP(message.line2, port.line2)  # メッセージ 2行目
     send_UDP(message.line3, port.line3)  # メッセージ 3行目
     send_UDP(message.line4, port.line4)  # メッセージ 4行目
+    send_UDP(message.line5, port.line5)  # メッセージ 5行目
+    send_UDP(message.face,  port.face)   # イメージ画像URL
     send_UDP(port.display_second_for_qc.to_s, port.display_second_port)  # 何秒表示するか
     port.time = Time.now
   end

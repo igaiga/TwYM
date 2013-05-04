@@ -24,7 +24,7 @@ class TwymController
         mb = mb_array[1]
         # [:label, {:message=>"Hello world!", :nick=>"igaiga"}] の形式で取れる。
         puts  qc_str = "#{mb[NICK]}: #{mb[MESSAGE]}"
-        @qc.send mb[NICK], mb[MESSAGE]
+        @qc.send mb[NICK], mb[MESSAGE], mb[FACE]
       else
         sleep 1
       end
@@ -35,13 +35,14 @@ class TwymController
     waitings = @ts.read_all([nil,nil])
     puts "waitings.size = #{waitings.size}"
     case 
-    when waitings.size < 3
+    when waitings.size < 2
       10
-    when waitings.size < 6
-      7
+    when waitings.size < 5
+      5
     else
-      3
+      1
     end
+    5
   end
 
 end
