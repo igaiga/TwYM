@@ -36,13 +36,12 @@ class TwymController
     puts "waitings.size = #{waitings.size}"
     case 
     when waitings.size < 2
-      10
+      8
     when waitings.size < 5
-      5
+      3
     else
       1
     end
-    5
   end
 
 end
