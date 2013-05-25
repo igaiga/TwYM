@@ -28,8 +28,8 @@ end
 files = Dir.glob("#{IMAGE_DIR}/**")
 
 while true
-  p files.sample
-  send_UDP(files.sample, URL_PORT) #TODO 定数
-  send_UDP(DISPLAY_SECOND.to_s, DISPLAY_SECOND_PORT) #TODO 定数
+  p rubyist = files.sample
+  send_UDP(rubyist, URL_PORT)
+  send_UDP(DISPLAY_SECOND.to_s, DISPLAY_SECOND_PORT)
   sleep DISPLAY_SECOND
 end
