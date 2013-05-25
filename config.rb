@@ -10,6 +10,7 @@ TWITTER = :twitter
 FACE_DEFAULT = "file:///Users/igarashi/twym/twym_github/ruby.png" # 画像が取得できなかったときの表示画像URL
 TUPLE_AVAILAVLE_TIME = 30 #sec
   #↑この時間以上経過したメッセージは表示しない
+RUBYISTS_DIR = "/Users/igarashi/work/rubyistokei/sepiatones"
 
 # twitter
 TWITTER_OAUTH_CONSUMER_KEY    = 'Fwt207Mk1k6SPACXrVoK6Q' # for twym
