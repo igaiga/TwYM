@@ -6,7 +6,7 @@ require 'nkf'
 load 'config.rb'
 
 IMAGE_DIR = RUBYISTS_DIR
-DISPLAY_SECOND = 2
+DISPLAY_SECOND = 30
 URL_PORT = 60101
 DISPLAY_SECOND_PORT = 60110
 
@@ -30,6 +30,7 @@ files = Dir.glob("#{IMAGE_DIR}/**")
 while true
   p rubyist = files.sample
   send_UDP(rubyist, URL_PORT)
-  send_UDP(DISPLAY_SECOND.to_s, DISPLAY_SECOND_PORT)
+#  send_UDP(DISPLAY_SECOND.to_s, DISPLAY_SECOND_PORT) # disable now
+#  次の画像が送信されたら切り替わる
   sleep DISPLAY_SECOND
 end
