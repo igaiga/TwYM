@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 source 'http://rubygems.org'
+gemspec
 
 gem 'json', '1.6.1'
 gem 'oauth', '0.4.5'
