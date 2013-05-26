@@ -3,3 +3,4 @@ twitter_to_ts_test.rb
 test_iga.rb
 config_twitter_oauth_access_token.rb
 *.wav
+pkg
