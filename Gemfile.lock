@@ -1,10 +1,25 @@
+PATH
+  remote: .
+  specs:
+    twym (2.0.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
+    diff-lcs (1.2.1)
     eventmachine (0.12.10)
     http_parser.rb (0.5.3)
     json (1.6.1)
     oauth (0.4.5)
+    rake (10.0.4)
+    rspec (2.13.0)
+      rspec-core (~> 2.13.0)
+      rspec-expectations (~> 2.13.0)
+      rspec-mocks (~> 2.13.0)
+    rspec-core (2.13.1)
+    rspec-expectations (2.13.0)
+      diff-lcs (>= 1.1.3, < 2.0)
+    rspec-mocks (2.13.0)
     simple_oauth (0.1.5)
     twitter-stream (0.1.14)
       eventmachine (>= 0.12.8)
@@ -18,4 +33,7 @@ DEPENDENCIES
   eventmachine (= 0.12.10)
   json (= 1.6.1)
   oauth (= 0.4.5)
+  rake
+  rspec
   twitter-stream (= 0.1.14)
+  twym!
