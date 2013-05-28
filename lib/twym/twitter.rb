@@ -17,7 +17,7 @@ module TwYM
     def run
       EventMachine::run do
         EventMachine::defer do
-          stream = ::Twitter::JSONStream.connect(em_parameters)
+          stream = ::Twitter::JSONStream.connect(twitter_parameters)
 
           stream.each_item do |status|
             begin
@@ -32,7 +32,7 @@ module TwYM
       end
     end
 
-    def em_parameters(query: DEFAULT_QUERY)
+    def twitter_parameters(query: DEFAULT_QUERY)
       {
          ssl: true,
          port: 443,
