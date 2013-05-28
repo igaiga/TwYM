@@ -8,10 +8,15 @@ Gem::Specification.new do |gem|
   gem.homepage      = 'https://github.com/igaiga/TwYM'
 
   gem.files         = `git ls-files`.split("\n")
+  gem.executables   = `git ls-files -- bin/*`.split("\n").map{|name| File.basename name }
   gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   gem.name          = 'twym'
   gem.require_paths = ['lib']
   gem.version       = TwYM::VERSION
+
+  gem.add_dependency 'json'
+  gem.add_dependency 'oauth'
+  gem.add_dependency 'twitter-stream'
 
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'rspec'

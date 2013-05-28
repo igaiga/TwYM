@@ -1,3 +1,5 @@
+require 'socket'
+
 module QuartzComposer
   class Channel
     DEFAULT_IP_ADDRESS = '225.0.0.0'
