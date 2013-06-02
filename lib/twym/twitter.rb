@@ -1,49 +1,75 @@
+require 'excon'
 require 'json'
-require 'uri'
-require 'yaml'
-require 'twitter/json_stream'
+require 'simple_oauth'
 
 module TwYM
   class Twitter
-    DEFAULT_QUERY = 'nowplaying'
+    DEFAULT_KEYWORD = 'nowplaying'
 
-    attr_reader :config, :channel
+    attr_reader :config, :channel, :keyword
 
-    def initialize(config)
+    def initialize(config, keyword: DEFAULT_KEYWORD)
       @config = config
+      @keyword = keyword
+
       @channel = TwYM::Channel::MessageChannel.new
+      @buffer = Buffer.new
     end
 
     def run
-      EventMachine::run do
-        EventMachine::defer do
-          stream = ::Twitter::JSONStream.connect(twitter_parameters)
+      streamer = ->(chunk, __remaining_bytes, __total_bytes) do
+        entities = @buffer << chunk
 
-          stream.each_item do |status|
-            begin
-              tweet = JSON.parse(status)
-              message = create_message(tweet)
-              channel << message
-            rescue => e
-              puts "Error: #{e}"
-            end
+        entities.each do |entity|
+          begin
+            tweet = JSON.parse(entity)
+            @channel << create_message(tweet)
+          rescue => e
+            puts "Failed to handle the tweet: #{e}"
           end
         end
       end
+
+      parameters = create_parameters(keyword)
+      headers = create_headers(parameters)
+
+      connection = Excon.new(twitter_url)
+      connection.request(method: 'GET', query: parameters, headers: headers, response_block: streamer)
     end
 
-    def twitter_parameters(query: DEFAULT_QUERY)
+    private
+
+    def twitter_url
+      'https://userstream.twitter.com/1/statuses/filter.json'
+    end
+
+    def twitter_oauth_config
+      twitter_config = config['twitter']
       {
-         ssl: true,
-         port: 443,
-         path: "/1/statuses/filter.json?track=#{URI.encode query}",
-         oauth: {
-           consumer_key: config['consumer_key'],
-           consumer_secret: config['consumer_secret'],
-           access_key: config['access_token'],
-           access_secret: config['access_token_secret'],
-         }
+        consumer_key: config['consumer_key'],
+        consumer_secret: config['consumer_secret'],
+        token: config['access_token'],
+        token_secret: config['access_token_secret'],
       }
+    end
+
+    def create_parameters(keyword)
+      {
+        track: keyword,
+      }
+    end
+
+    def create_headers(parameters)
+      authorization = create_oauth_header(parameters)
+
+      {
+        'Authorization' => authorization,
+      }
+    end
+
+    def create_oauth_header(parameters)
+      header = SimpleOAuth::Header.new('GET', twitter_url, parameters, twitter_oauth_config)
+      header.to_s
     end
 
     def create_message(tweet)
@@ -52,6 +78,24 @@ module TwYM
       image_url = tweet['user']['profile_image_url']
 
       TwYM::Message::Post.new(name, text, image_url)
+    end
+
+    class Buffer
+      NEWLINE = "\r\n"
+
+      def initialize
+        @string = ''
+      end
+
+      def <<(chunk)
+        finished = chunk.length >= 2 && chunk[-2..-1] == NEWLINE
+
+        current = @string + chunk
+        entities = current.split NEWLINE
+        @string = finished ? '' : entities.pop
+
+        entities
+      end
     end
   end
 end

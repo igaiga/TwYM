@@ -16,7 +16,8 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency 'json'
   gem.add_dependency 'oauth'
-  gem.add_dependency 'twitter-stream'
+  gem.add_dependency 'simple_oauth'
+  gem.add_dependency 'excon'
 
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'rspec'

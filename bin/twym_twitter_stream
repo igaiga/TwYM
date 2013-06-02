@@ -1,11 +1,13 @@
 # -*- mode: ruby -*-
 # vim: filetype=ruby
 
+require 'yaml'
 require 'twym'
 require 'twym/twitter'
 
 filename = ARGV.shift || './config.yml'
 config = YAML.load_file(filename)['twitter']
 
-twitter_stream = TwYM::Twitter.new(config)
+keyword = ARGV.shift
+twitter_stream = TwYM::Twitter.new(config, keyword: keyword)
 twitter_stream.run
