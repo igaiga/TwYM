@@ -24,7 +24,7 @@ IRC, twitter のメッセージを表示できるタイマーです。
 - twitter_oauth_authorize.rb : twitter OAuth認証クラス
 
 ## Install
-### 下記のコマンドで gemパッケージをインストールします。（必要に応じて sudo してください。）
+下記のコマンドで gemパッケージをインストールします。（必要に応じて sudo してください。）
 - $ gem install bundler
 - $ bundle install
 
@@ -108,9 +108,9 @@ new BSD license
 ご協力ありがとうございます。
 
 ## 今後やりたいこと
--- 定期的なメンテナンス
--- デザイン改良
--- gem化
+- 定期的なメンテナンス
+- デザイン改良
+- gem化
 
 ## Version History
 
