@@ -1,21 +1,18 @@
-#! ruby -Ku
 # coding: utf-8
-$:.unshift File.join(File.dirname(__FILE__))
-
+# For Ruby 2.0, 2.1
 require 'net/http'
 require 'uri'
 require 'drb'
 
 #gems
-require 'rubygems'
 require 'json'
 require 'oauth'
 require 'twitter/json_stream'
 require 'eventmachine'
 
 # TwYM
-require 'twitter_oauth_authorize.rb'
-require 'config.rb'
+require_relative 'twitter_oauth_authorize.rb'
+require_relative 'config.rb'
 
 # twitter query
 #HASHTAG = 'kosenconf'

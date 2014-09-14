@@ -1,6 +1,5 @@
-#! ruby -Ku
 # coding: utf-8
-
+# For Ruby 2.0, 2.1
 TS_URL = 'druby://localhost:12555'
 NICK = :nick
 MESSAGE = :message

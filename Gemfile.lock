@@ -1,11 +1,19 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    cinch (2.1.0)
+    coderay (1.1.0)
     eventmachine (0.12.10)
     http_parser.rb (0.5.3)
     json (1.6.1)
+    method_source (0.8.2)
     oauth (0.4.5)
+    pry (0.10.0)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
     simple_oauth (0.1.5)
+    slop (3.5.0)
     twitter-stream (0.1.14)
       eventmachine (>= 0.12.8)
       http_parser.rb (~> 0.5.1)
@@ -15,7 +23,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  cinch (= 2.1.0)
   eventmachine (= 0.12.10)
   json (= 1.6.1)
   oauth (= 0.4.5)
+  pry
   twitter-stream (= 0.1.14)

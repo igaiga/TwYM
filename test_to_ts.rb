@@ -1,5 +1,5 @@
-#! ruby -Ku
 # coding: utf-8
+# For Ruby 2.0, 2.1
 require 'drb'
 load 'config.rb'
 

@@ -1,5 +1,4 @@
-#!ruby -Ku
-# -*- coding: utf-8; -*-
+# coding: utf-8
 
 # path setting
 this_file_s_path = File.expand_path(File.dirname(__FILE__))
@@ -10,11 +9,6 @@ $LOAD_PATH.unshift this_file_s_path
 require 'socket'
 require 'nkf'
 require 'pp'
-#require 'rubygems'
-#require 'pry'
-
-# ruby1.9はUTF-32BEを扱うのに標準ライブラリ kconv を使う
-#require 'kconv'
 
 class QC_ports
   attr_accessor :id, :name, :line1, :line2, :line3, :line4, :line5, :face, :time, :display_second, :display_second_for_qc, :display_second_port

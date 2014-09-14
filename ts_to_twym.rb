@@ -1,11 +1,7 @@
-#! ruby -Ku
-# -*- coding: utf-8; -*-
-
-require 'twym'
+# coding: utf-8
+# For Ruby 2.0, 2.1
 require 'drb'
-#require 'rubygems'
-#require 'ruby-debug'
-
+require_relative 'twym'
 load 'config.rb'
 
 class TwymController
