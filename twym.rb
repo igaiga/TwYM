@@ -53,7 +53,7 @@ class Message
       str = @work_str
       @work_str = nil
     end
-    str = ' ' if str == '' #上記の理由で空文字送信防止
+    str = ' ' + str # QC表示時に左端が切れる問題対応 && 上記の理由で空文字送信防止
     str
   end
 
