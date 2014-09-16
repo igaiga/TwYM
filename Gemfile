@@ -1,4 +1,3 @@
-# coding: utf-8
 source 'http://rubygems.org'
 
 gem 'json', '1.6.1'

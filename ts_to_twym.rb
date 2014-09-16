@@ -1,4 +1,3 @@
-# coding: utf-8
 # For Ruby 2.0, 2.1
 require 'drb'
 require_relative 'twym'
@@ -30,7 +29,7 @@ class TwymController
   def display_second
     waitings = @ts.read_all([nil,nil])
     puts "waitings.size = #{waitings.size}"
-    case 
+    case
     when waitings.size < 2
       8
     when waitings.size < 5

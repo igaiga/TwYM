@@ -1,5 +1,3 @@
-# coding: utf-8
-
 # path setting
 this_file_s_path = File.expand_path(File.dirname(__FILE__))
 twym_path = File.expand_path(this_file_s_path + "/")
@@ -105,7 +103,7 @@ class ToQC
 
   # 前の送信から指定秒秒経過したportがあれば送信
   def send_message(message, display_second)
-    @ports.each do | port |  
+    @ports.each do | port |
       if port.time == nil || port.time < Time.now - port.display_second
         port.set_display_second display_second
         send_message_every_ports(port, message)
@@ -128,7 +126,7 @@ class ToQC
     send_UDP(port.display_second_for_qc.to_s, port.display_second_port)  # 何秒表示するか
     port.time = Time.now
   end
-  
+
   def send_star(str)
     str_u8 = NKF.nkf('--utf8', str) # out:UTF8(non BOM)
     if str_u8 =~ /\*/ui or str_u8 =~ /★/u or str_u8 =~ /☆/u # u: UTF-8, i: 大文字小文字無視
@@ -149,8 +147,7 @@ class ToQC
     str_u32BE = NKF.nkf('-w32B0 -W',str_u8) # out: UTF-32(non BOM), in: UTF-8(non BOM)
     #ruby1.9.1
     #  str_u32BE = Kconv.kconv(str_u8,  Kconv::UTF32,  Kconv::UTF8)
-    
+
     socket.send(str_u32BE, 0)
   end
 end
-
