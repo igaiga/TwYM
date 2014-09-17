@@ -1,4 +1,3 @@
-# coding: utf-8
 # For Ruby 2.0, 2.1
 require 'net/http'
 require 'uri'
@@ -42,7 +41,7 @@ EventMachine::run {
                  :access_key      => oauth_access_token,
                  :access_secret   => oauth_access_secret })
     stream.each_item do |status|
-      tweet = JSON.parse(status)      
+      tweet = JSON.parse(status)
       screen_name = tweet['user']['screen_name']
       face = tweet['user']['profile_image_url']
       body = tweet['text'].gsub(/##{query}$/i,'')
