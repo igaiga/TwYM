@@ -16,7 +16,8 @@ require_relative 'config.rb'
 # twitter query
 #HASHTAG = 'kosenconf'
 #HASHTAG = 'glt'
-HASHTAG = 'nowplaying'
+HASHTAG = '#rubykaigi'
+#HASHTAG = 'nowplaying'
 # 引数指定があればそちら優先、なければ HASHTAG
 query = URI.encode( ARGV.shift || HASHTAG )
 

@@ -26,4 +26,4 @@ class IrcController
   end
 end
 
-IrcController.new(server: "chat.us.freenode.net", channels: ["#rubykaigi", "#rubykaigi-1"]).run
+IrcController.new(server: "irc.rubykaigi.org", channels: ["#rubykaigi", "#hall-a"]).run
