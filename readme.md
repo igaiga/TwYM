@@ -97,7 +97,8 @@ new BSD license
 使いました報告をもらえると小躍りして喜びます。ヽ(´▽`)ノ
 
 ## Contributer
-- @_ko1
+- @_ko1 (Nadoka)
+- @m_seki (Rinda)
 - @yoozoosato
 - @yamaguchiintlab
 - @june29
@@ -105,6 +106,8 @@ new BSD license
 - @mitaku
 - @sora_h
 - @cesare
+- @120reset
+- @murokaco
 ご協力ありがとうございます。
 
 ## 今後やりたいこと
