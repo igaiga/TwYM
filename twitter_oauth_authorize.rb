@@ -10,7 +10,7 @@ class OAuthAuthorizer
     consumer = OAuth::Consumer.new(
                                    TWITTER_OAUTH_CONSUMER_KEY,
                                    TWITTER_OAUTH_CONSUMER_SECRET, {
-                                     :site => TWITTER_URL })
+                                     site: TWITTER_URL })
 
     request_token = consumer.get_request_token
     puts "The page have been opened in browser is for OAuth. "
@@ -21,7 +21,7 @@ class OAuthAuthorizer
     pin = gets
     pin = pin.chomp!.slice(/^.{0,7}/)
 
-    access_token = request_token.get_access_token(:oauth_verifier => pin)
+    access_token = request_token.get_access_token(oauth_verifier: pin)
     token        = access_token.token
     secret       = access_token.secret
 

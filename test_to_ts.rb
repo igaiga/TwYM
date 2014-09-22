@@ -14,11 +14,12 @@ while true
   message += ' ☆' if i % 3 == 0
   message += ' *' if i % 5 == 0
   tweets = []
-  tweets << {:name => 'igaiga555', :face => 'https://si0.twimg.com/profile_images/2775085674/aacc6da0f43115bb2e60878e10a92377_bigger.jpeg' }
-  tweets << {:name => 'june29', :face => 'https://si0.twimg.com/profile_images/3433607286/e4cd5a708d9644957545b9b1165cf196_bigger.jpeg' }
-  tweets << {:name => 'hmsk', :face => 'https://si0.twimg.com/profile_images/1491871238/kengo05_bigger.png' }
-  tweets << {:name => "TwYM_tester_123", :face => ''} # twitter id 最大が15文字
-  mb = Hash.new
+  tweets << {name: 'igaiga555',       face: 'https://si0.twimg.com/profile_images/2775085674/aacc6da0f43115bb2e60878e10a92377_bigger.jpeg' }
+  tweets << {name: 'june29',          face: 'https://si0.twimg.com/profile_images/3433607286/e4cd5a708d9644957545b9b1165cf196_bigger.jpeg' }
+  tweets << {name: 'hmsk',            face: 'https://si0.twimg.com/profile_images/1491871238/kengo05_bigger.png' }
+  tweets << {name: "TwYM_tester_123", face:  '' } # twitter id 最大が15文字
+
+  mb = {}
   mb[MESSAGE] = message
   tweet = tweets.shuffle.first
   mb[NICK] = tweet[:name]
