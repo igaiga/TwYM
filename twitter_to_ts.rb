@@ -32,14 +32,14 @@ $ts = DRbObject.new_with_uri(TS_URL)
 EventMachine::run {
   EventMachine::defer {
     stream = Twitter::JSONStream.connect(
-               :ssl => true,
-               :port => 443,
-               :path => "/1/statuses/filter.json?track=#{query}",
-               :oauth => {
-                 :consumer_key    => TWITTER_OAUTH_CONSUMER_KEY,
-                 :consumer_secret => TWITTER_OAUTH_CONSUMER_SECRET,
-                 :access_key      => oauth_access_token,
-                 :access_secret   => oauth_access_secret })
+               ssl: true,
+               port: 443,
+               path: "/1/statuses/filter.json?track=#{query}",
+               oauth: {
+                 consumer_key:    TWITTER_OAUTH_CONSUMER_KEY,
+                 consumer_secret: TWITTER_OAUTH_CONSUMER_SECRET,
+                 access_key:      oauth_access_token,
+                 access_secret:   oauth_access_secret })
     stream.each_item do |status|
       tweet = JSON.parse(status)
       screen_name = tweet['user']['screen_name']
